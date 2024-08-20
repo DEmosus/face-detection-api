@@ -1,0 +1,64 @@
+
+services:
+
+  # Backend API
+  face-detection-app-api:
+    container_name: backend
+    build: ./
+    volumes:
+      - ./:/usr/src/face-detection-app-api
+    ports:
+      - "3000:3000"
+    command: npm start
+    working_dir: /usr/src/face-detection-app-api
+    # environment:
+    #   POSTGRES_URI: postgres://jacky:secret@postgres:5432/face-detection-docker
+    environment:
+      POSTGRES_USER: jacky
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: face-detection-docker
+      POSTGRES_HOST: postgres
+      REDIS_URI: redis://redis:6379
+      # REDIS_URI: redis://cache
+    links:
+      - postgres
+      - redis
+    depends_on:
+      - postgres
+      - redis
+
+    # expose:
+    #   - 3000
+
+  # Postgres
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: jacky
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: face-detection-docker
+      POSTGRES_HOST: postgres
+    build: ./postgres
+    ports:
+      - "5432:5432"
+
+  
+  # Redis
+  redis:
+    container_name: redis
+    image: redis:latest
+    # tty: true
+    # restart: always
+    ports:
+      - "6379:6379"
+    # command: ["redis", "--bind",  "--port", "6379"]
+
+    # command: redis-server
+    build: ./
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    # volumes:
+    #   - redis-server:/usr/src/face-detection-app-api
+    #   - redis:/var/lib/redis
+      # - redis-config:/usr/local/etc/redis/redis.conf
