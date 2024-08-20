@@ -25,11 +25,11 @@ const db = knex({
     client: 'pg',
     connection: 
     {
-        host: process.env.DATABASE_HOST,
+        host: process.env.POSTGRES_HOST,
         port: 5432,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PW,
-        database: process.env.DATABASE_DB,
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
     },
 });
 
